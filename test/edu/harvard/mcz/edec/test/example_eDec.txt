@@ -1,0 +1,8 @@
+I~SE~8/9/2002~123456~T~5555555~Carrier Name~MasterWaybill~HouseWaybill~A~
+~~BondedWarehouse~4~PackageMarks~IEBusiness~IELastName~IEFirstName~IEMid
+dleName~123 Any Street, Ste. 500
+~SEATTLE~WA~55555~4444~444.444.4444~FSRBusiness~FSRLastName~FSRFirstN
+ame~FSRMiddleName~FSRAddress~TOKYO~JP~555.555.9999~CustomsBrokerBusNa
+me~555-555-5555~999-999-9999~BrokerLastName~BrokerFirstName|
+PINCTADA~MAXIMA~~OYSTER~~~JWL~W~10~NO~500~ID|
+MUSTELA~VISON~~AMERICAN MINK~~~SKI~F~1000~NO~25000~CA
