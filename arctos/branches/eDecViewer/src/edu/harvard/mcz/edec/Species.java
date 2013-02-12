@@ -230,8 +230,9 @@ public class Species {
      * @param string eDec species line to parse, excluding the pipe character.
      */
     public Species(String eDecSpeciesLine) {
-    	String[] sp = eDecSpeciesLine.split("\\~");
-    	if (sp.length==12) { 
+    	String[] sp = eDecSpeciesLine.split("\\~",12);
+    	if (sp.length<=12) {
+    		try {
     		// Valid length
     		setGenus(sp[0]);
     		setSpecies(sp[1]);
@@ -245,6 +246,9 @@ public class Species {
     		setUnits(sp[9]);
     		setValue(sp[10]);
     		setCountryOfOrigin(sp[11]);
+    		} catch (IndexOutOfBoundsException e) { 
+    			// if there are trailing blank fields.
+    		}
     	} else { 
     		// incorrect length
     		setGenus("");
