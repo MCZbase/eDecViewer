@@ -552,7 +552,11 @@ public class Species {
     public boolean sourceCodeContains(String value) {
     	boolean result = false; 
     	for (int i=0; i<SOURCE_CODES.length; i++) {
-    		if (value.equals(SOURCE_CODES[i])) { result = true; }
+    		try { 
+    		   if (value.equals(SOURCE_CODES[i])) { result = true; }
+    		} catch (NullPointerException e) { 
+    			System.out.println(e.getMessage());
+    		}
     	}
     	return result;
     }
@@ -657,7 +661,12 @@ public class Species {
     	if (value==null) { 
     		value = "";
     	}
-    	if (value.length()>Species.COUNTRY_SIZE) { value = value.substring(0, Species.COUNTRY_SIZE); }
+    	if (value.length()>Species.COUNTRY_SIZE) { 
+    	    // try looking up the country code from the provided string
+    		String lookup = new Country().getCodeForCountryName(value);
+    		if (lookup!="") { value = lookup; } 
+    		value = value.substring(0, Species.COUNTRY_SIZE); 
+    	} 
         this.countryOfOrigin = value;
     }
 

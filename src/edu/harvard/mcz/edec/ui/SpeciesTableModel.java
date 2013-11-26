@@ -34,6 +34,8 @@ public class SpeciesTableModel extends AbstractTableModel {
 	
 	private List<Species> species;
 	
+	public static final int COLUMN_COUNTRY_OF_ORIGIN = 11;
+	
 	public SpeciesTableModel() { 
 		species = new ArrayList<Species>();
 	}
@@ -98,7 +100,7 @@ public class SpeciesTableModel extends AbstractTableModel {
 		case 10: 
 			result = species.get(rowIndex).getValue();
 			break;
-		case 11: 
+		case COLUMN_COUNTRY_OF_ORIGIN: 
 			result = species.get(rowIndex).getCountryOfOrigin();
 			break;
 		}
@@ -145,7 +147,7 @@ public class SpeciesTableModel extends AbstractTableModel {
 		case 10: 
 			result = "Value,USD";
 			break;
-		case 11: 
+		case COLUMN_COUNTRY_OF_ORIGIN: 
 			result = "Country of Origin";
 			break;
 		}
@@ -233,7 +235,7 @@ public class SpeciesTableModel extends AbstractTableModel {
 		case 10: 
 			species.get(rowIndex).setValue(aValue.toString());
 			break;
-		case 11: 
+		case COLUMN_COUNTRY_OF_ORIGIN: 
 			species.get(rowIndex).setCountryOfOrigin(aValue.toString());
 			break;
 		}

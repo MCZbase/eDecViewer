@@ -20,6 +20,8 @@ package edu.harvard.mcz.edec.ui;
 import java.awt.EventQueue;
 import java.awt.Point;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
@@ -43,6 +45,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import com.jgoodies.forms.layout.FormLayout;
@@ -51,6 +54,8 @@ import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.factories.FormFactory;
 
 import edu.harvard.mcz.edec.Core;
+import edu.harvard.mcz.edec.Country;
+import edu.harvard.mcz.edec.Country.CountryAndCode;
 import edu.harvard.mcz.edec.EDec;
 import edu.harvard.mcz.edec.Species;
 
@@ -58,6 +63,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JFormattedTextField;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.text.DefaultFormatter;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -116,7 +122,7 @@ public class EDecViewer {
 	private JTextField textFieldForMiddleName;
 	private JTextField textFieldForAddress;
 	private JTextField textFieldForCity;
-	private JTextField textFieldForCountry;
+	private JComboBox<CountryAndCode> comboBoxForCountry;
 	private JTextField textFieldForPhone;
 	
 	private Point popupPoint;
@@ -147,7 +153,9 @@ public class EDecViewer {
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @param CountryAndCode 
 	 */
+	@SuppressWarnings("unchecked")
 	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 790, 777);
@@ -524,9 +532,10 @@ public class EDecViewer {
 		JLabel lblCountry = new JLabel("Country");
 		frame.getContentPane().add(lblCountry, "8, 38, right, default");
 		
-		textFieldForCountry = new JTextField();
-		frame.getContentPane().add(textFieldForCountry, "10, 38, 3, 1, fill, default");
-		textFieldForCountry.setColumns(10);
+		//textFieldForCountry = new JComboBox<String>(Locale.getISOCountries());
+		DefaultComboBoxModel<CountryAndCode> model = new DefaultComboBoxModel<CountryAndCode>(new Country().getCountryArray());
+		comboBoxForCountry = new JComboBox<CountryAndCode>(model);
+		frame.getContentPane().add(comboBoxForCountry, "10, 38, 3, 1, fill, default");
 		
 		JLabel lblNewLabel_16 = new JLabel("Phone number");
 		frame.getContentPane().add(lblNewLabel_16, "2, 40, right, default");
@@ -584,6 +593,7 @@ public class EDecViewer {
 		frame.getContentPane().add(scrollPane, "2, 50, 11, 1, fill, fill");
 		
 		table = new JTable();
+		
 		scrollPane.setViewportView(table);
 		
 		JPopupMenu popupMenu = new JPopupMenu();
@@ -699,10 +709,16 @@ public class EDecViewer {
 		textFieldForMiddleName.setText(edec.getCoreFields().getForMiddleName());
 		textFieldForAddress.setText(edec.getCoreFields().getForAddress());
 		textFieldForCity.setText(edec.getCoreFields().getForCity());
-		textFieldForCountry.setText(edec.getCoreFields().getForCountry());
+		System.out.println(edec.getCoreFields().getForCountry());
+		CountryAndCode country = new Country().getObjectForCode(edec.getCoreFields().getForCountry());
+		((DefaultComboBoxModel)comboBoxForCountry.getModel()).addElement(country);
+		comboBoxForCountry.setSelectedItem(country);
 		textFieldForPhone.setText(edec.getCoreFields().getForPhone());
 		
 		table.setModel(new SpeciesTableModel(edec.getSpeciesFields()));
+		TableColumn columnCountry = table.getColumnModel().getColumn(SpeciesTableModel.COLUMN_COUNTRY_OF_ORIGIN);
+		DefaultComboBoxModel<CountryAndCode> model = new DefaultComboBoxModel<CountryAndCode>(new Country().getCountryArray());
+		columnCountry.setCellEditor(new DefaultCellEditor(new JComboBox<CountryAndCode>(model)));
 		
 	}
 	
@@ -744,7 +760,7 @@ public class EDecViewer {
 		edec.getCoreFields().setForMiddleName(textFieldForMiddleName.getText());
 		edec.getCoreFields().setForAddress(textFieldForAddress.getText());
 		edec.getCoreFields().setForCity(textFieldForCity.getText());
-		edec.getCoreFields().setForCountry(textFieldForCountry.getText());
+		edec.getCoreFields().setForCountry(((CountryAndCode)comboBoxForCountry.getSelectedItem()).getCode());
 		edec.getCoreFields().setForPhone(textFieldForPhone.getText());
 
 	}

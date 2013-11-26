@@ -80,7 +80,6 @@ public class EDecBuilder {
 				Species species = new Species();
 				species.setWildlifeCode("SPE");  // Specimen (Scientific or museum)
 				String scientificName = speciesList.getString(1);
-System.out.println(scientificName);
 				NameParser parser = new NameParser();
 				parser.debug = false;
 				ParsedName pn = null;
