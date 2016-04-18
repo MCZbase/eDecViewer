@@ -23,6 +23,9 @@ public class TestCountryLookup {
 	public void testGetCodeForCountryName() {
 		Country country = new Country();
 		assertEquals("MX",country.getCodeForCountryName("Mexico"));
+		assertEquals("US",country.getCodeForCountryName("United States"));		
+		assertEquals("IN",country.getCodeForCountryName("India"));
+		assertEquals("PH",country.getCodeForCountryName("Philippines"));
 		
 		assertEquals("",country.getCodeForCountryName("Axzzzzz"));
 	}
@@ -32,6 +35,11 @@ public class TestCountryLookup {
 		Species species = new Species();
 		species.setCountryOfOrigin("Mexico");
 		assertEquals("MX",species.getCountryOfOrigin());
+		species.setCountryOfOrigin("United States");
+		assertEquals("US",species.getCountryOfOrigin());
+		species.setCountryOfOrigin("India");
+		assertEquals("IN",species.getCountryOfOrigin());	
+		
 		species.setCountryOfOrigin("Axzzzzzz");
 		assertEquals("Ax",species.getCountryOfOrigin());
 		species.setCountryOfOrigin("AA");

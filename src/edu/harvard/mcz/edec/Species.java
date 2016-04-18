@@ -661,13 +661,17 @@ public class Species {
     	if (value==null) { 
     		value = "";
     	}
+    	String retval = value;
     	if (value.length()>Species.COUNTRY_SIZE) { 
     	    // try looking up the country code from the provided string
-    		String lookup = new Country().getCodeForCountryName(value);
-    		if (lookup!="") { value = lookup; } 
-    		value = value.substring(0, Species.COUNTRY_SIZE); 
+    		String lookup = (new Country()).getCodeForCountryName(value);
+    		if (lookup!="") { 
+    			retval = lookup; 
+    		} else { 
+    		    retval = value.substring(0, Species.COUNTRY_SIZE);
+    		}
     	} 
-        this.countryOfOrigin = value;
+        this.countryOfOrigin = retval;
     }
 
 }
