@@ -24,13 +24,22 @@ public class Country {
         }
 	}
 	
+	/**
+	 * Given a string which may be a country code or a country name, return the country code.
+	 * 
+	 * @param aName to check for country code
+	 * @return the corresponding country code.
+	 */
 	public String getCodeForCountryName(String aName) {
 		String result = "";
 		Iterator<CountryAndCode> i = countries.iterator();
-		while (i.hasNext()) { 
+		boolean found=false;
+		while (i.hasNext() && !found) { 
 			CountryAndCode ct = i.next();
-			if (ct.getCountry().equals(aName)) { 
+			// Country code or country name may be provided, handle either case.
+			if (ct.getCountry().equals(aName) || ct.getCode().equals(aName)) { 
 				result = ct.getCode();
+				found=true;
 			}
 		}
 		return result;
