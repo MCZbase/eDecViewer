@@ -20,9 +20,11 @@ package edu.harvard.mcz.edec.mczbase;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.gbif.ecat.model.ParsedName;
-import org.gbif.ecat.parser.NameParser;
-import org.gbif.ecat.parser.UnparsableException;
+import org.gbif.nameparser.NameParserGBIF;
+import org.gbif.nameparser.api.NameParser;
+import org.gbif.nameparser.api.NomCode;
+import org.gbif.nameparser.api.ParsedName;
+import org.gbif.nameparser.api.UnparsableNameException;
 
 import edu.harvard.mcz.edec.Core;
 import edu.harvard.mcz.edec.EDec;
@@ -75,20 +77,28 @@ public class EDecBuilder {
 		edec.setCoreFields(core);
 		
 		
-		try {
+		// The parser runs each parse on its own thread pool, close it when done.
+		try (NameParser parser = new NameParserGBIF()) {
 			while (speciesList.next()) { 
 				Species species = new Species();
 				species.setWildlifeCode("SPE");  // Specimen (Scientific or museum)
 				String scientificName = speciesList.getString(1);
-				NameParser parser = new NameParser();
-				parser.debug = false;
 				ParsedName pn = null;
 				try {
-					pn = parser.parse(scientificName);
-					species.setGenus(pn.getGenusOrAbove());
+					// eDec declares wildlife, so parse under the zoological code
+					pn = parser.parse(scientificName, null, NomCode.ZOOLOGICAL);
+					// a name above genus rank has a uninomial and no genus
+					if (pn.getGenus() != null) { 
+						species.setGenus(pn.getGenus());
+					} else { 
+						species.setGenus(pn.getUninomial());
+					}
 					species.setSpecies(pn.getSpecificEpithet());
-					species.setSubspecies(pn.getInfraSpecificEpithet());
-				} catch (UnparsableException e) {
+					species.setSubspecies(pn.getInfraspecificEpithet());
+				} catch (UnparsableNameException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
 					e.printStackTrace();
 				}
 				try {
@@ -103,6 +113,9 @@ public class EDecBuilder {
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// from closing the parser
 			e.printStackTrace();
 		}
 		
